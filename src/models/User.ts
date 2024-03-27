@@ -6,6 +6,10 @@ export class User {
   id!: number
   @prop({ required: true, default: 'ru' })
   language!: string
+  @prop({ required: true, default: null })
+  tgUser!: object
+  @prop({ required: true, default: 'intro' })   
+  funnelStep!: string
   @prop({ required: true, default: 'user' })
   role!: string
 }
@@ -20,5 +24,12 @@ export function findOrCreateUser(id: number) {
       upsert: true,
       new: true,
     }
+  )
+}
+
+export function setTgUser(id:number, tgUser: object) {
+  return UserModel.updateOne(
+    { id },
+    {tgUser: tgUser}
   )
 }

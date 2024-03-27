@@ -3,3 +3,4 @@ help: |
   <b>Бот</b> является примером бота на Telegram.
 language: Пожалуйста, выберите язык.
 language_selected: <b>Бот</b> теперь говорит по-русски.
+greeting: Привет! Это Random Writing Bot

@@ -22,6 +22,8 @@ const i18n_1 = require("@/helpers/i18n");
 const language_2 = require("@/menus/language");
 const help_1 = require("@/handlers/help");
 const startMongo_1 = require("@/helpers/startMongo");
+const intro_1 = require("@/handlers/intro");
+const User_1 = require("./models/User");
 function runApp() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Starting app...');
@@ -40,12 +42,16 @@ function runApp() {
         // Commands
         bot_1.default.command(['help', 'start'], help_1.default);
         bot_1.default.command('language', language_1.default);
-        bot_1.default.hears("ping", (ctx) => __awaiter(this, void 0, void 0, function* () {
-            // `reply` is an alias for `sendMessage` in the same chat (see next section).
-            yield ctx.reply("pong", {
-                // `reply_parameters` specifies the actual reply feature.
-                reply_parameters: { message_id: ctx.msg.message_id },
-            });
+        bot_1.default.command('intro', intro_1.handleIntro);
+        bot_1.default.on('message', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            // Check if the message is a reply to the bot
+            if (ctx.dbuser.funnelStep = 'greetings') {
+                const userName = ctx.message.text;
+                // Reply with "Nice to meet you, <name>"
+                const userInfo = ctx.message.from;
+                yield (0, User_1.setTgUser)(ctx.dbuser.id, userInfo);
+                yield ctx.reply(`Nice to meet you, ${userName}!`);
+            }
         }));
         // Errors
         bot_1.default.catch(console.error);

@@ -12,6 +12,8 @@ import i18n from '@/helpers/i18n'
 import languageMenu from '@/menus/language'
 import sendHelp from '@/handlers/help'
 import startMongo from '@/helpers/startMongo'
+import { handleIntro } from '@/handlers/intro'
+import { setTgUser } from './models/User'
 
 async function runApp() {
   console.log('Starting app...')
@@ -30,13 +32,17 @@ async function runApp() {
   // Commands
   bot.command(['help', 'start'], sendHelp)
   bot.command('language', handleLanguage)
-  bot.hears("ping", async (ctx) => {
-    // `reply` is an alias for `sendMessage` in the same chat (see next section).
-    await ctx.reply("pong", {
-      // `reply_parameters` specifies the actual reply feature.
-      reply_parameters: { message_id: ctx.msg.message_id },
-    });
-  });
+  bot.command('intro', handleIntro)
+  bot.on('message', async (ctx) => {
+    // Check if the message is a reply to the bot
+    if (ctx.dbuser.funnelStep = 'greetings') {
+        const userName = ctx.message.text;
+        // Reply with "Nice to meet you, <name>"
+        const userInfo = ctx.message.from
+        await setTgUser(ctx.dbuser.id, userInfo)
+        await ctx.reply(`Nice to meet you, ${userName}!`);
+    } 
+});
   // Errors
   bot.catch(console.error)
   // Start bot

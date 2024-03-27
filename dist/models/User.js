@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findOrCreateUser = exports.User = void 0;
+exports.setTgUser = exports.findOrCreateUser = exports.User = void 0;
 const typegoose_1 = require("@typegoose/typegoose");
 let User = class User {
 };
@@ -21,6 +21,14 @@ __decorate([
     (0, typegoose_1.prop)({ required: true, default: 'ru' }),
     __metadata("design:type", String)
 ], User.prototype, "language", void 0);
+__decorate([
+    (0, typegoose_1.prop)({ required: true, default: null }),
+    __metadata("design:type", Object)
+], User.prototype, "tgUser", void 0);
+__decorate([
+    (0, typegoose_1.prop)({ required: true, default: 'intro' }),
+    __metadata("design:type", String)
+], User.prototype, "funnelStep", void 0);
 __decorate([
     (0, typegoose_1.prop)({ required: true, default: 'user' }),
     __metadata("design:type", String)
@@ -37,4 +45,8 @@ function findOrCreateUser(id) {
     });
 }
 exports.findOrCreateUser = findOrCreateUser;
+function setTgUser(id, tgUser) {
+    return UserModel.updateOne({ id }, { tgUser: tgUser });
+}
+exports.setTgUser = setTgUser;
 //# sourceMappingURL=User.js.map
