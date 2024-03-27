@@ -1,0 +1,1 @@
+{"version":3,"file":"configureI18n.js","sourceRoot":"","sources":["../../src/middlewares/configureI18n.ts"],"names":[],"mappings":";;AAGA,SAAS,aAAa,CAAC,GAAY,EAAE,IAAkB;IACrD,GAAG,CAAC,IAAI,CAAC,MAAM,CAAC,GAAG,CAAC,MAAM,CAAC,QAAQ,CAAC,CAAA;IACpC,OAAO,IAAI,EAAE,CAAA;AACf,CAAC;AAED,kBAAe,aAAa,CAAA"}
