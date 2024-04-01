@@ -13,7 +13,8 @@ import languageMenu from '@/menus/language'
 import sendHelp from '@/handlers/help'
 import startMongo from '@/helpers/startMongo'
 import { handleIntro } from '@/handlers/intro'
-import { setTgUser } from './models/User'
+import { setTgUser, FunnelStep, moveFunnelStep, getFunnelStep } from './models/User'
+import sendOptions from '@/helpers/sendOptions'
 
 async function runApp() {
   console.log('Starting app...')
@@ -34,14 +35,26 @@ async function runApp() {
   bot.command('language', handleLanguage)
   bot.command('intro', handleIntro)
   bot.on('message', async (ctx) => {
-    // Check if the message is a reply to the bot
-    if (ctx.dbuser.funnelStep = 'greetings') {
-        const userName = ctx.message.text;
-        // Reply with "Nice to meet you, <name>"
-        const userInfo = ctx.message.from
-        await setTgUser(ctx.dbuser.id, userInfo)
-        await ctx.reply(`Nice to meet you, ${userName}!`);
+    const funnelStep = await getFunnelStep(ctx.dbuser.id)
+    if (funnelStep === FunnelStep.Greetings) {
+        ctx.replyWithLocalization('greeting', {
+          ...sendOptions(ctx),
+          reply_markup: languageMenu,
+        })
     } 
+    else if (funnelStep === FunnelStep.City) {
+        const text = ctx.message.text;
+        await moveFunnelStep(ctx.dbuser.id)
+        await ctx.reply('city ' + text)
+    }
+    else if (funnelStep === FunnelStep.Books) {
+        const text = ctx.message.text;
+        await moveFunnelStep(ctx.dbuser.id)
+        await ctx.reply('books ' + text)
+    }
+    else {
+      // do nothing if user is registered
+    }
 });
   // Errors
   bot.catch(console.error)

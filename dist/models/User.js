@@ -9,8 +9,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setTgUser = exports.findOrCreateUser = exports.User = void 0;
+exports.moveFunnelStep = exports.getFunnelStep = exports.setTgUser = exports.findOrCreateUser = exports.User = exports.FunnelStep = void 0;
 const typegoose_1 = require("@typegoose/typegoose");
+var FunnelStep;
+(function (FunnelStep) {
+    FunnelStep[FunnelStep["Greetings"] = 1] = "Greetings";
+    FunnelStep[FunnelStep["City"] = 2] = "City";
+    FunnelStep[FunnelStep["Books"] = 3] = "Books";
+    FunnelStep[FunnelStep["Done"] = 4] = "Done";
+})(FunnelStep = exports.FunnelStep || (exports.FunnelStep = {}));
 let User = class User {
 };
 __decorate([
@@ -26,8 +33,8 @@ __decorate([
     __metadata("design:type", Object)
 ], User.prototype, "tgUser", void 0);
 __decorate([
-    (0, typegoose_1.prop)({ required: true, default: 'intro' }),
-    __metadata("design:type", String)
+    (0, typegoose_1.prop)({ required: true, default: FunnelStep.Greetings }),
+    __metadata("design:type", Number)
 ], User.prototype, "funnelStep", void 0);
 __decorate([
     (0, typegoose_1.prop)({ required: true, default: 'user' }),
@@ -49,4 +56,26 @@ function setTgUser(id, tgUser) {
     return UserModel.updateOne({ id }, { tgUser: tgUser });
 }
 exports.setTgUser = setTgUser;
+function getFunnelStep(id) {
+    return UserModel.findOne({ id }).select('funnelStep').exec()
+        .then(user => {
+        if (user) {
+            return user.funnelStep;
+        }
+        else {
+            return null;
+        }
+    })
+        .catch(error => {
+        console.error('Error retrieving funnelStep:', error);
+        return null;
+    });
+}
+exports.getFunnelStep = getFunnelStep;
+function moveFunnelStep(id) {
+    return UserModel.findOneAndUpdate({ id }, { $inc: { funnelStep: 1 } }, // Increment the funnelStep value by 1
+    { new: true } // Return the updated document after the update operation
+    );
+}
+exports.moveFunnelStep = moveFunnelStep;
 //# sourceMappingURL=User.js.map

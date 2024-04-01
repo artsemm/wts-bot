@@ -24,6 +24,7 @@ const help_1 = require("@/handlers/help");
 const startMongo_1 = require("@/helpers/startMongo");
 const intro_1 = require("@/handlers/intro");
 const User_1 = require("./models/User");
+const sendOptions_1 = require("@/helpers/sendOptions");
 function runApp() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Starting app...');
@@ -44,13 +45,22 @@ function runApp() {
         bot_1.default.command('language', language_1.default);
         bot_1.default.command('intro', intro_1.handleIntro);
         bot_1.default.on('message', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            // Check if the message is a reply to the bot
-            if (ctx.dbuser.funnelStep = 'greetings') {
-                const userName = ctx.message.text;
-                // Reply with "Nice to meet you, <name>"
-                const userInfo = ctx.message.from;
-                yield (0, User_1.setTgUser)(ctx.dbuser.id, userInfo);
-                yield ctx.reply(`Nice to meet you, ${userName}!`);
+            const funnelStep = yield (0, User_1.getFunnelStep)(ctx.dbuser.id);
+            if (funnelStep === User_1.FunnelStep.Greetings) {
+                ctx.replyWithLocalization('greeting', Object.assign(Object.assign({}, (0, sendOptions_1.default)(ctx)), { reply_markup: language_2.default }));
+            }
+            else if (funnelStep === User_1.FunnelStep.City) {
+                const text = ctx.message.text;
+                yield (0, User_1.moveFunnelStep)(ctx.dbuser.id);
+                yield ctx.reply('city ' + text);
+            }
+            else if (funnelStep === User_1.FunnelStep.Books) {
+                const text = ctx.message.text;
+                yield (0, User_1.moveFunnelStep)(ctx.dbuser.id);
+                yield ctx.reply('books ' + text);
+            }
+            else {
+                // do nothing if user is registered
             }
         }));
         // Errors
