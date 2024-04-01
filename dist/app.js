@@ -47,7 +47,7 @@ function runApp() {
         bot_1.default.on('message', (ctx) => __awaiter(this, void 0, void 0, function* () {
             const funnelStep = yield (0, User_1.getFunnelStep)(ctx.dbuser.id);
             if (funnelStep === User_1.FunnelStep.Greetings) {
-                ctx.replyWithLocalization('greeting', Object.assign(Object.assign({}, (0, sendOptions_1.default)(ctx)), { reply_markup: language_2.default }));
+                ctx.replyWithLocalization('greeting', (0, sendOptions_1.default)(ctx));
             }
             else if (funnelStep === User_1.FunnelStep.City) {
                 const text = ctx.message.text;

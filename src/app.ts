@@ -37,10 +37,7 @@ async function runApp() {
   bot.on('message', async (ctx) => {
     const funnelStep = await getFunnelStep(ctx.dbuser.id)
     if (funnelStep === FunnelStep.Greetings) {
-        ctx.replyWithLocalization('greeting', {
-          ...sendOptions(ctx),
-          reply_markup: languageMenu,
-        })
+        ctx.replyWithLocalization('greeting', sendOptions(ctx))
     } 
     else if (funnelStep === FunnelStep.City) {
         const text = ctx.message.text;
