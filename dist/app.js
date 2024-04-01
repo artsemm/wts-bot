@@ -24,7 +24,6 @@ const help_1 = require("@/handlers/help");
 const startMongo_1 = require("@/helpers/startMongo");
 const intro_1 = require("@/handlers/intro");
 const User_1 = require("./models/User");
-const sendOptions_1 = require("@/helpers/sendOptions");
 function runApp() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Starting app...');
@@ -45,19 +44,36 @@ function runApp() {
         bot_1.default.command('language', language_1.default);
         bot_1.default.command('intro', intro_1.handleIntro);
         bot_1.default.on('message', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
             const funnelStep = yield (0, User_1.getFunnelStep)(ctx.dbuser.id);
             if (funnelStep === User_1.FunnelStep.Greetings) {
-                ctx.replyWithLocalization('greeting', (0, sendOptions_1.default)(ctx));
+                ctx.api.sendMessage(ctx.dbuser.id, `Привет! Это Random Writing Bot комьюнити школы текстов <a href="https://t.me/+8nVJic5UKAIwZThi">Мне есть что сказать</a> ⚡️ 
+
+Раз в месяц он мэтчит вас с другим участником или участницей комьюнити, чтобы договориться о знакомстве онлайн или офлайн. 
+Вы сможете обсудить любые волнующие писательские вопросы или тему месяца — её также предложит бот.
+
+Для начала давайте познакомимся. Напишите свои имя и фамилию 👀`, { parse_mode: 'HTML' });
+                yield (0, User_1.moveFunnelStep)(ctx.dbuser.id);
             }
             else if (funnelStep === User_1.FunnelStep.City) {
-                const text = ctx.message.text;
-                yield (0, User_1.moveFunnelStep)(ctx.dbuser.id);
-                yield ctx.reply('city ' + text);
+                const nameSurname = (_a = ctx.message) === null || _a === void 0 ? void 0 : _a.text;
+                if (nameSurname) {
+                    const nameOnly = nameSurname.trim().split(/\s+/)[0];
+                    ctx.api.sendMessage(ctx.dbuser.id, `Спасибо, ${nameOnly} 🙂 
+  
+Чтобы вы с мэтчем сразу узнали друг про друга, расскажите про три книги, которые вы прочитали недавно и которые произвели на вас впечатления. 
+Никто не ждет подробной рецензии – просто напишите о книгах в паре предложений. `, { parse_mode: 'HTML' });
+                    yield (0, User_1.moveFunnelStep)(ctx.dbuser.id);
+                }
             }
             else if (funnelStep === User_1.FunnelStep.Books) {
-                const text = ctx.message.text;
-                yield (0, User_1.moveFunnelStep)(ctx.dbuser.id);
-                yield ctx.reply('books ' + text);
+                const booksInfo = (_b = ctx.message) === null || _b === void 0 ? void 0 : _b.text;
+                if (booksInfo) {
+                    ctx.api.sendMessage(ctx.dbuser.id, `Спасибо, ` + '_username_' + ` Бот взялся за работу. А теперь небольшая инструкция:
+        1. Каждый первый понедельник месяца вы будете узнавать свою пару — я пришлю сообщение с ником вашего мэтча и его или её книжную подборку в этот чат. А еще отправлю сюда тему месяца. Напишите своему мэтчу в телеграме, чтобы договориться о встрече или созвоне. 
+        2. В конце месяца я спрошу о том, как прошла встреча. Вот и всё! Если будут вопросы – пишите сюда 
+        `, { parse_mode: 'HTML' });
+                }
             }
             else {
                 // do nothing if user is registered

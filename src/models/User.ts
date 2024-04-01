@@ -19,6 +19,12 @@ export class User {
   funnelStep!: FunnelStep
   @prop({ required: true, default: 'user' })
   role!: string
+  @prop({ required: true, default: null })
+  name!: string
+  @prop({ required: true, default: null })
+  city!: string
+  @prop({ required: true, default: null })
+  review!: string
 }
 
 const UserModel = getModelForClass(User)

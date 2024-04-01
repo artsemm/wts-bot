@@ -40,6 +40,18 @@ __decorate([
     (0, typegoose_1.prop)({ required: true, default: 'user' }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
+__decorate([
+    (0, typegoose_1.prop)({ required: true, default: null }),
+    __metadata("design:type", String)
+], User.prototype, "name", void 0);
+__decorate([
+    (0, typegoose_1.prop)({ required: true, default: null }),
+    __metadata("design:type", String)
+], User.prototype, "city", void 0);
+__decorate([
+    (0, typegoose_1.prop)({ required: true, default: null }),
+    __metadata("design:type", String)
+], User.prototype, "review", void 0);
 User = __decorate([
     (0, typegoose_1.modelOptions)({ schemaOptions: { timestamps: true } })
 ], User);
