@@ -1,8 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const sendOptions_1 = require("@/helpers/sendOptions");
+const User_1 = require("@/models/User");
 function handleHelp(ctx) {
-    return ctx.replyWithLocalization('greeting', (0, sendOptions_1.default)(ctx));
+    var _a, _b;
+    if ((_a = ctx.message) === null || _a === void 0 ? void 0 : _a.from) {
+        (0, User_1.setTgUser)(ctx.dbuser.id, (_b = ctx.message) === null || _b === void 0 ? void 0 : _b.from);
+    }
+    return;
 }
 exports.default = handleHelp;
 //# sourceMappingURL=help.js.map

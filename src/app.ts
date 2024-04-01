@@ -13,8 +13,7 @@ import languageMenu from '@/menus/language'
 import sendHelp from '@/handlers/help'
 import startMongo from '@/helpers/startMongo'
 import { handleIntro } from '@/handlers/intro'
-import { setTgUser, FunnelStep, moveFunnelStep, getFunnelStep } from './models/User'
-import sendOptions from '@/helpers/sendOptions'
+import { setName, FunnelStep, moveFunnelStep, getFunnelStep } from './models/User'
 
 async function runApp() {
   console.log('Starting app...')
@@ -48,12 +47,12 @@ async function runApp() {
     else if (funnelStep === FunnelStep.City) {
         const nameSurname = ctx.message?.text
         if (nameSurname) {
+          await setName(ctx.dbuser.id, nameSurname)
           const nameOnly = nameSurname.trim().split(/\s+/)[0]
           ctx.api.sendMessage(ctx.dbuser.id, `Спасибо, ${nameOnly} 🙂 
   
 Чтобы вы с мэтчем сразу узнали друг про друга, расскажите про три книги, которые вы прочитали недавно и которые произвели на вас впечатления. 
 Никто не ждет подробной рецензии – просто напишите о книгах в паре предложений. `, {parse_mode: 'HTML'})
-          
           
           await moveFunnelStep(ctx.dbuser.id) 
         }

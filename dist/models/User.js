@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.moveFunnelStep = exports.getFunnelStep = exports.setTgUser = exports.findOrCreateUser = exports.User = exports.FunnelStep = void 0;
+exports.moveFunnelStep = exports.getFunnelStep = exports.setName = exports.setTgUser = exports.findOrCreateUser = exports.User = exports.FunnelStep = void 0;
 const typegoose_1 = require("@typegoose/typegoose");
 var FunnelStep;
 (function (FunnelStep) {
@@ -68,6 +68,10 @@ function setTgUser(id, tgUser) {
     return UserModel.updateOne({ id }, { tgUser: tgUser });
 }
 exports.setTgUser = setTgUser;
+function setName(id, name) {
+    return UserModel.updateOne({ id }, { name: name });
+}
+exports.setName = setName;
 function getFunnelStep(id) {
     return UserModel.findOne({ id }).select('funnelStep').exec()
         .then(user => {

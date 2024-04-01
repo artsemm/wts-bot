@@ -47,6 +47,13 @@ export function setTgUser(id:number, tgUser: object) {
   )
 }
 
+export function setName(id:number, name: string) {
+  return UserModel.updateOne(
+    { id },
+    {name: name}
+  )
+}
+
 export function getFunnelStep(id: number): Promise<FunnelStep | number | null> {
   return UserModel.findOne({ id }).select('funnelStep').exec()
     .then(user => {

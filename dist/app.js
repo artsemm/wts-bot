@@ -58,6 +58,7 @@ function runApp() {
             else if (funnelStep === User_1.FunnelStep.City) {
                 const nameSurname = (_a = ctx.message) === null || _a === void 0 ? void 0 : _a.text;
                 if (nameSurname) {
+                    yield (0, User_1.setName)(ctx.dbuser.id, nameSurname);
                     const nameOnly = nameSurname.trim().split(/\s+/)[0];
                     ctx.api.sendMessage(ctx.dbuser.id, `Спасибо, ${nameOnly} 🙂 
   
