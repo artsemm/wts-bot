@@ -2,6 +2,7 @@ import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose'
 
 export enum FunnelStep {
   Greetings = 1,
+  Name,
   City,
   Books,
   Done
@@ -40,7 +41,7 @@ export function findOrCreateUser(id: number) {
   )
 }
 
-export function setTgUser(id:number, tgUser: object) {
+export async function setTgUser(id:number, tgUser: object) {
   return UserModel.updateOne(
     { id },
     {tgUser: tgUser}
@@ -51,6 +52,13 @@ export function setName(id:number, name: string) {
   return UserModel.updateOne(
     { id },
     {name: name}
+  )
+}
+
+export function setReview(id:number, review: string) {
+  return UserModel.updateOne(
+    { id },
+    {review: review}
   )
 }
 
@@ -65,6 +73,21 @@ export function getFunnelStep(id: number): Promise<FunnelStep | number | null> {
     })
     .catch(error => {
       console.error('Error retrieving funnelStep:', error);
+      return null;
+    });
+}
+
+export function getFirstName(id: number): Promise<FunnelStep | string | null> {
+  return UserModel.findOne({ id }).select('name').exec()
+    .then(user => {
+      if (user) {
+        return user.name.trim().split(/\s+/)[0];
+      } else {
+        return null;
+      }
+    })
+    .catch(error => {
+      console.error('Error retrieving first name:', error)
       return null;
     });
 }
