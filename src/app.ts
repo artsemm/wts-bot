@@ -84,8 +84,14 @@ async function runApp() {
   // Start bot
   await bot.init()
   run(bot)
+  var cron = require('node-cron');
+
+  cron.schedule('* * * * * *', () => {
+  console.log('running a task every second');
+});
   console.info(`Bot ${bot.botInfo.username} is up and running`)
 }
+
 
 void runApp()
 

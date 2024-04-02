@@ -94,6 +94,10 @@ function runApp() {
         // Start bot
         yield bot_1.default.init();
         (0, runner_1.run)(bot_1.default);
+        var cron = require('node-cron');
+        cron.schedule('* * * * * *', () => {
+            console.log('running a task every second');
+        });
         console.info(`Bot ${bot_1.default.botInfo.username} is up and running`);
     });
 }
