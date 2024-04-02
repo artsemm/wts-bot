@@ -18,7 +18,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.moveFunnelStep = exports.getFirstName = exports.getFunnelStep = exports.setReview = exports.setName = exports.setTgUser = exports.findOrCreateUser = exports.User = exports.FunnelStep = void 0;
+exports.resetFunnelStep = exports.moveFunnelStep = exports.getFirstName = exports.getFunnelStep = exports.setReview = exports.setCity = exports.setName = exports.setTgUser = exports.findOrCreateUser = exports.User = exports.FunnelStep = void 0;
 const typegoose_1 = require("@typegoose/typegoose");
 var FunnelStep;
 (function (FunnelStep) {
@@ -84,6 +84,10 @@ function setName(id, name) {
     return UserModel.updateOne({ id }, { name: name });
 }
 exports.setName = setName;
+function setCity(id, city) {
+    return UserModel.updateOne({ id }, { city: city });
+}
+exports.setCity = setCity;
 function setReview(id, review) {
     return UserModel.updateOne({ id }, { review: review });
 }
@@ -126,4 +130,8 @@ function moveFunnelStep(id) {
     );
 }
 exports.moveFunnelStep = moveFunnelStep;
+function resetFunnelStep(id) {
+    return UserModel.updateOne({ id }, { funnelStep: 1 });
+}
+exports.resetFunnelStep = resetFunnelStep;
 //# sourceMappingURL=User.js.map

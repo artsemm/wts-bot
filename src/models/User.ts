@@ -55,6 +55,13 @@ export function setName(id:number, name: string) {
   )
 }
 
+export function setCity(id:number, city: string) {
+  return UserModel.updateOne(
+    { id },
+    {city: city}
+  )
+}
+
 export function setReview(id:number, review: string) {
   return UserModel.updateOne(
     { id },
@@ -77,7 +84,7 @@ export function getFunnelStep(id: number): Promise<FunnelStep | number | null> {
     });
 }
 
-export function getFirstName(id: number): Promise<FunnelStep | string | null> {
+export function getFirstName(id: number): Promise<string | null> {
   return UserModel.findOne({ id }).select('name').exec()
     .then(user => {
       if (user) {
@@ -99,4 +106,11 @@ export function moveFunnelStep(id: number) {
     { $inc: { funnelStep: 1 } }, // Increment the funnelStep value by 1
     { new: true } // Return the updated document after the update operation
   );
+}
+
+export function resetFunnelStep(id: number) {
+  return UserModel.updateOne(
+    { id },
+    { funnelStep: 1}
+  )
 }

@@ -20,7 +20,6 @@ const configureI18n_1 = require("@/middlewares/configureI18n");
 const language_1 = require("@/handlers/language");
 const i18n_1 = require("@/helpers/i18n");
 const language_2 = require("@/menus/language");
-const help_1 = require("@/handlers/help");
 const startMongo_1 = require("@/helpers/startMongo");
 const intro_1 = require("@/handlers/intro");
 const User_1 = require("./models/User");
@@ -40,44 +39,52 @@ function runApp() {
             // Menus
             .use(language_2.default);
         // Commands
-        bot_1.default.command(['help', 'start'], help_1.default);
-        bot_1.default.command('language', language_1.default);
-        bot_1.default.command('intro', intro_1.handleIntro);
-        bot_1.default.on('message', (ctx) => __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
+        bot_1.default.command(['help', 'start'], (ctx) => __awaiter(this, void 0, void 0, function* () {
             const funnelStep = yield (0, User_1.getFunnelStep)(ctx.dbuser.id);
             if (funnelStep === User_1.FunnelStep.Greetings) {
-                ctx.api.sendMessage(ctx.dbuser.id, `Привет! Это Random Writing Bot комьюнити школы текстов <a href="https://t.me/+8nVJic5UKAIwZThi">Мне есть что сказать</a> ⚡️ 
-
-Раз в месяц он мэтчит вас с другим участником или участницей комьюнити, чтобы договориться о знакомстве онлайн или офлайн. 
-Вы сможете обсудить любые волнующие писательские вопросы или тему месяца — её также предложит бот.
-
-Для начала давайте познакомимся. Напишите свои имя и фамилию 👀`, { parse_mode: 'HTML' });
+                ctx.api.sendMessage(ctx.dbuser.id, (0, intro_1.getGreetingsText)(), { parse_mode: 'HTML' });
+            }
+            else {
+                ctx.api.sendMessage(ctx.dbuser.id, `Если вы хотите изменить информацию о себе, воспользуйтесь командой /reset`, { parse_mode: 'HTML' });
+            }
+        }));
+        bot_1.default.command('reset', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            yield (0, User_1.resetFunnelStep)(ctx.dbuser.id);
+            yield ctx.api.sendMessage(ctx.dbuser.id, (0, intro_1.getGreetingsText)(), { parse_mode: 'HTML' });
+            yield (0, User_1.moveFunnelStep)(ctx.dbuser.id);
+        }));
+        bot_1.default.command('language', language_1.default);
+        bot_1.default.on('message', (ctx) => __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c;
+            const funnelStep = yield (0, User_1.getFunnelStep)(ctx.dbuser.id);
+            console.log(funnelStep);
+            if (funnelStep === User_1.FunnelStep.Greetings) {
+                ctx.api.sendMessage(ctx.dbuser.id, (0, intro_1.getGreetingsText)(), { parse_mode: 'HTML' });
                 yield (0, User_1.moveFunnelStep)(ctx.dbuser.id);
             }
-            else if (funnelStep === User_1.FunnelStep.City) { // TODO добавить шаг с городом (именем)
+            else if (funnelStep === User_1.FunnelStep.Name) {
                 const nameSurname = (_a = ctx.message) === null || _a === void 0 ? void 0 : _a.text;
                 if (nameSurname) {
                     yield (0, User_1.setName)(ctx.dbuser.id, nameSurname);
-                    ctx.api.sendMessage(ctx.dbuser.id, `Спасибо, ${yield (0, User_1.getFirstName)(ctx.dbuser.id)} 🙂 
-  
-Чтобы вы с мэтчем сразу узнали друг про друга, расскажите про три книги, которые вы прочитали недавно и которые произвели на вас впечатления. 
-Никто не ждет подробной рецензии – просто напишите о книгах в паре предложений. `, { parse_mode: 'HTML' });
+                    ctx.api.sendMessage(ctx.dbuser.id, (0, intro_1.getCityText)(yield (0, User_1.getFirstName)(ctx.dbuser.id)), { parse_mode: 'HTML' });
+                }
+                yield (0, User_1.moveFunnelStep)(ctx.dbuser.id);
+            }
+            else if (funnelStep === User_1.FunnelStep.City) {
+                const city = (_b = ctx.message) === null || _b === void 0 ? void 0 : _b.text;
+                if (city) {
+                    yield (0, User_1.setCity)(ctx.dbuser.id, city);
+                    ctx.api.sendMessage(ctx.dbuser.id, (0, intro_1.getBooksText)(yield (0, User_1.getFirstName)(ctx.dbuser.id)), { parse_mode: 'HTML' });
                     yield (0, User_1.moveFunnelStep)(ctx.dbuser.id);
                 }
             }
             else if (funnelStep === User_1.FunnelStep.Books) {
-                const review = (_b = ctx.message) === null || _b === void 0 ? void 0 : _b.text;
+                const review = (_c = ctx.message) === null || _c === void 0 ? void 0 : _c.text;
                 if (review) {
                     yield (0, User_1.setReview)(ctx.dbuser.id, review);
-                    ctx.api.sendMessage(ctx.dbuser.id, `Спасибо, ${yield (0, User_1.getFirstName)(ctx.dbuser.id)} 
-Бот взялся за работу. А теперь небольшая инструкция:
-
-1. Каждый первый понедельник месяца вы будете узнавать свою пару — я пришлю сообщение с ником вашего мэтча и его или её книжную подборку в этот чат. А еще отправлю сюда тему месяца. Напишите своему мэтчу в телеграме, чтобы договориться о встрече или созвоне. 
-
-2. В конце месяца я спрошу о том, как прошла встреча. Вот и всё! Если будут вопросы – пишите сюда 
-        `, { parse_mode: 'HTML' });
+                    ctx.api.sendMessage(ctx.dbuser.id, (0, intro_1.getRegEndText)(yield (0, User_1.getFirstName)(ctx.dbuser.id)), { parse_mode: 'HTML' });
                 }
+                yield (0, User_1.moveFunnelStep)(ctx.dbuser.id);
             }
             else {
                 // do nothing if user is registered
