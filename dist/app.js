@@ -23,11 +23,13 @@ const language_2 = require("@/menus/language");
 const startMongo_1 = require("@/helpers/startMongo");
 const intro_1 = require("@/handlers/intro");
 const User_1 = require("./models/User");
+const scheduler_1 = require("./middlewares/scheduler");
 function runApp() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Starting app...');
         // Mongo
         yield (0, startMongo_1.default)();
+        (0, scheduler_1.setScheduler)();
         console.log('Mongo connected');
         bot_1.default
             // Middlewares
@@ -94,10 +96,6 @@ function runApp() {
         // Start bot
         yield bot_1.default.init();
         (0, runner_1.run)(bot_1.default);
-        var cron = require('node-cron');
-        cron.schedule('* * * * * *', () => {
-            console.log('running a task every second');
-        });
         console.info(`Bot ${bot_1.default.botInfo.username} is up and running`);
     });
 }

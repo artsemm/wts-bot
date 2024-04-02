@@ -10,15 +10,16 @@ import configureI18n from '@/middlewares/configureI18n'
 import handleLanguage from '@/handlers/language'
 import i18n from '@/helpers/i18n'
 import languageMenu from '@/menus/language'
-import sendHelp from '@/handlers/help'
 import startMongo from '@/helpers/startMongo'
 import { getBooksText, getCityText, getGreetingsText, getRegEndText } from '@/handlers/intro'
 import { setName, setCity, FunnelStep, moveFunnelStep, getFunnelStep, setReview, getFirstName, resetFunnelStep } from './models/User'
+import { setScheduler } from './middlewares/scheduler'
 
 async function runApp() {
   console.log('Starting app...')
   // Mongo
   await startMongo()
+  setScheduler()
   console.log('Mongo connected')
   bot
     // Middlewares
@@ -84,11 +85,6 @@ async function runApp() {
   // Start bot
   await bot.init()
   run(bot)
-  var cron = require('node-cron');
-
-  cron.schedule('* * * * * *', () => {
-  console.log('running a task every second');
-});
   console.info(`Bot ${bot.botInfo.username} is up and running`)
 }
 
