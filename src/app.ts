@@ -46,7 +46,6 @@ async function runApp() {
   bot.command('language', handleLanguage)
   bot.on('message', async (ctx) => {
     const funnelStep = await getFunnelStep(ctx.dbuser.id)
-    console.log(funnelStep)
     if (funnelStep === FunnelStep.Greetings) {
         ctx.api.sendMessage(ctx.dbuser.id, getGreetingsText(), {parse_mode: 'HTML'})
         await moveFunnelStep(ctx.dbuser.id)

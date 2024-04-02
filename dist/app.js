@@ -57,7 +57,6 @@ function runApp() {
         bot_1.default.on('message', (ctx) => __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c;
             const funnelStep = yield (0, User_1.getFunnelStep)(ctx.dbuser.id);
-            console.log(funnelStep);
             if (funnelStep === User_1.FunnelStep.Greetings) {
                 ctx.api.sendMessage(ctx.dbuser.id, (0, intro_1.getGreetingsText)(), { parse_mode: 'HTML' });
                 yield (0, User_1.moveFunnelStep)(ctx.dbuser.id);
