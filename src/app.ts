@@ -14,12 +14,13 @@ import startMongo from '@/helpers/startMongo'
 import { getBooksText, getCityText, getGreetingsText, getRegEndText } from '@/handlers/intro'
 import { setName, setCity, FunnelStep, moveFunnelStep, getFunnelStep, setReview, getFirstName, resetFunnelStep } from './models/User'
 import { setScheduler } from './middlewares/scheduler'
+import showLog from './middlewares/logs'
 
 async function runApp() {
   console.log('Starting app...')
   // Mongo
   await startMongo()
-  setScheduler()
+  // setScheduler()
   console.log('Mongo connected')
   bot
     // Middlewares
@@ -28,6 +29,7 @@ async function runApp() {
     .use(attachUser)
     .use(i18n.middleware())
     .use(configureI18n)
+    .use(showLog)
     // Menus
     .use(languageMenu)
   // Commands

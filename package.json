@@ -18,6 +18,7 @@
     "@grammyjs/menu": "^1.0.4",
     "@grammyjs/runner": "^1.0.3",
     "@types/node-cron": "^3.0.11",
+    "dayjs": "^1.11.10",
     "dotenv": "^10.0.0",
     "envalid": "^7.2.2",
     "grammy": "^1.5.0",

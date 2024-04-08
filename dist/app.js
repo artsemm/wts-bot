@@ -8,28 +8,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 require("module-alias/register");
 require("reflect-metadata");
 require("source-map-support/register");
 const grammy_middlewares_1 = require("grammy-middlewares");
 const runner_1 = require("@grammyjs/runner");
-const attachUser_1 = require("@/middlewares/attachUser");
-const bot_1 = require("@/helpers/bot");
-const configureI18n_1 = require("@/middlewares/configureI18n");
-const language_1 = require("@/handlers/language");
-const i18n_1 = require("@/helpers/i18n");
-const language_2 = require("@/menus/language");
-const startMongo_1 = require("@/helpers/startMongo");
+const attachUser_1 = __importDefault(require("@/middlewares/attachUser"));
+const bot_1 = __importDefault(require("@/helpers/bot"));
+const configureI18n_1 = __importDefault(require("@/middlewares/configureI18n"));
+const language_1 = __importDefault(require("@/handlers/language"));
+const i18n_1 = __importDefault(require("@/helpers/i18n"));
+const language_2 = __importDefault(require("@/menus/language"));
+const startMongo_1 = __importDefault(require("@/helpers/startMongo"));
 const intro_1 = require("@/handlers/intro");
 const User_1 = require("./models/User");
-const scheduler_1 = require("./middlewares/scheduler");
+const logs_1 = __importDefault(require("./middlewares/logs"));
 function runApp() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Starting app...');
         // Mongo
         yield (0, startMongo_1.default)();
-        (0, scheduler_1.setScheduler)();
+        // setScheduler()
         console.log('Mongo connected');
         bot_1.default
             // Middlewares
@@ -38,6 +41,7 @@ function runApp() {
             .use(attachUser_1.default)
             .use(i18n_1.default.middleware())
             .use(configureI18n_1.default)
+            .use(logs_1.default)
             // Menus
             .use(language_2.default);
         // Commands
