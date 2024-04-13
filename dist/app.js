@@ -26,13 +26,14 @@ const language_2 = __importDefault(require("@/menus/language"));
 const startMongo_1 = __importDefault(require("@/helpers/startMongo"));
 const intro_1 = require("@/handlers/intro");
 const User_1 = require("./models/User");
+const scheduler_1 = require("./middlewares/scheduler");
 const logs_1 = __importDefault(require("./middlewares/logs"));
 function runApp() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Starting app...');
         // Mongo
         yield (0, startMongo_1.default)();
-        // setScheduler()
+        (0, scheduler_1.setScheduler)();
         console.log('Mongo connected');
         bot_1.default
             // Middlewares

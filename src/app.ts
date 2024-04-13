@@ -13,14 +13,14 @@ import languageMenu from '@/menus/language'
 import startMongo from '@/helpers/startMongo'
 import { getBooksText, getCityText, getGreetingsText, getRegEndText } from '@/handlers/intro'
 import { setName, setCity, FunnelStep, moveFunnelStep, getFunnelStep, setReview, getFirstName, resetFunnelStep } from './models/User'
-import { setScheduler } from './middlewares/scheduler'
+import { setScheduler } from './handlers/scheduler'
 import showLog from './middlewares/logs'
 
 async function runApp() {
   console.log('Starting app...')
   // Mongo
   await startMongo()
-  // setScheduler()
+  setScheduler()
   console.log('Mongo connected')
   bot
     // Middlewares
