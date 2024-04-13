@@ -26,7 +26,7 @@ const language_2 = __importDefault(require("@/menus/language"));
 const startMongo_1 = __importDefault(require("@/helpers/startMongo"));
 const intro_1 = require("@/handlers/intro");
 const User_1 = require("./models/User");
-const scheduler_1 = require("./middlewares/scheduler");
+const scheduler_1 = require("./handlers/scheduler");
 const logs_1 = __importDefault(require("./middlewares/logs"));
 function runApp() {
     return __awaiter(this, void 0, void 0, function* () {
