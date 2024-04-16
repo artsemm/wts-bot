@@ -1,6 +1,9 @@
-// example.ts
-function greet(name: string) {
-    console.log(`Hello, ${name}!`);
-}
+#!/usr/bin/env ts-node-script
 
-greet("John");
+import * as os from 'os'
+
+function hello(name: string) {
+    return 'Hello, ' + name
+}
+const user = os.userInfo().username
+console.log(`Result: ${hello(user)}`)
