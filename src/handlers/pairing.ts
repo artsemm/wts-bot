@@ -12,7 +12,7 @@ let previousPairs: number[][] = [
     [2, 6]
 ]
 
-function countUserPairs(previousPairs: number[][]): { [key: number]: number } {
+function countUserPairs(previousPairs: number[][], users?: Array<number>): { [key: number]: number } {
     let userCounts: { [key: number]: number } = {}
     previousPairs.forEach(pair => {
         pair.forEach(user => {
@@ -20,6 +20,13 @@ function countUserPairs(previousPairs: number[][]): { [key: number]: number } {
             userCounts[user] = (userCounts[user] || 0) + 1
         })
     })
+    if (users) {
+        for (let user of users) {
+            if (userCounts[user] === undefined) {
+                userCounts[user] = 0
+            }
+        }
+    }
 
     return userCounts
 }
@@ -33,5 +40,21 @@ function resetPairsForLimitUsers(users: Array<number>, pairs: number[][]): numbe
     return pairs
 }
 
-let res = resetPairsForLimitUsers(users, previousPairs)
-console.log(res)
+let pairs = resetPairsForLimitUsers(users, previousPairs)
+let userCounts = countUserPairs(pairs)
+
+console.log(userCounts)
+
+userCounts = countUserPairs(pairs, users)
+console.log(userCounts)
+
+// let userCountsArray = Object.keys(userCounts).map(userId => ({ userId: parseInt(userId), count: userCounts[parseInt(userId)] }))
+
+// // Sort the array of objects in descending order based on count
+// userCountsArray.sort((a, b) => b.count - a.count)
+
+// // Extract the sorted list of user IDs
+// let sortedUsers = userCountsArray.map(user => user.userId)
+
+// console.log(userCounts)
+// console.log(sortedUsers)
