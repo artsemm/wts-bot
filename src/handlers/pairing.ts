@@ -2,16 +2,6 @@
 
 import * as os from 'os'
 
-let users: Array<number> = [1, 2, 3, 4, 5, 6]
-let previousPairs: number[][] = [
-    [1, 2],
-    [2, 3],
-    [5, 6],
-    [2, 4],
-    [2, 5],
-    [2, 6]
-]
-
 function countUserPairs(previousPairs: number[][], users?: Array<number>): { [key: number]: number } {
     let userCounts: { [key: number]: number } = {}
     previousPairs.forEach(pair => {
@@ -31,8 +21,7 @@ function countUserPairs(previousPairs: number[][], users?: Array<number>): { [ke
     return userCounts
 }
 
-function resetPairsForLimitUsers(users: Array<number>, pairs: number[][]): number[][] {
-    let userCounts = countUserPairs(pairs)
+function resetPairsForLimitUsers(userCounts:  { [key: number]: number }, pairs: number[][]): number[][] {
     let usersToReset: Array<number> = users.filter(user => (userCounts[user] || users.length - 1) === users.length - 1)
     pairs = pairs.filter(pair => 
         !pair.some(user => usersToReset.includes(user))
@@ -40,21 +29,46 @@ function resetPairsForLimitUsers(users: Array<number>, pairs: number[][]): numbe
     return pairs
 }
 
-let pairs = resetPairsForLimitUsers(users, previousPairs)
-let userCounts = countUserPairs(pairs)
+function getResettedPairs(previousPairs: number[][], users?: Array<number>): number[][] {
+    let userCounts = countUserPairs(previousPairs, users)
+    return resetPairsForLimitUsers(userCounts, previousPairs)
+}
 
-console.log(userCounts)
+function generateRandomPairs(previousPairs: number[][], users: number[]) {
+    const allPossiblePairs = [];
+    for (let i = 0; i < users.length; i++) {
+        for (let j = i + 1; j < users.length; j++) {
+            allPossiblePairs.push([users[i], users[j]])
+        }
+    }
 
-userCounts = countUserPairs(pairs, users)
-console.log(userCounts)
+    const availablePairs = allPossiblePairs.filter(pair => {
+        return !previousPairs.some(prevPair => {
+            return pair[0] === prevPair[0] && pair[1] === prevPair[1]
+        })
+    })
 
-// let userCountsArray = Object.keys(userCounts).map(userId => ({ userId: parseInt(userId), count: userCounts[parseInt(userId)] }))
+    const numPairsToGenerate = Math.min(availablePairs.length, Math.floor(users.length / 2))
+    const randomPairs = []
+    for (let i = 0; i < numPairsToGenerate; i++) {
+        const randomIndex = Math.floor(Math.random() * availablePairs.length)
+        randomPairs.push(availablePairs[randomIndex])
+        availablePairs.splice(randomIndex, 1)
+    }
 
-// // Sort the array of objects in descending order based on count
-// userCountsArray.sort((a, b) => b.count - a.count)
+    return randomPairs
+}
 
-// // Extract the sorted list of user IDs
-// let sortedUsers = userCountsArray.map(user => user.userId)
+let users: Array<number> = [1, 2, 3, 4, 5, 6]
+let previousPairs: number[][] = [
+    [1, 2],
+    // [2, 3],
+    [5, 6],
+    [2, 4],
+    [2, 5],
+    [2, 6]
+]
 
-// console.log(userCounts)
-// console.log(sortedUsers)
+let resettedPairs = getResettedPairs(previousPairs)
+let randomPairs = generateRandomPairs(resettedPairs, users)
+console.log(randomPairs)
