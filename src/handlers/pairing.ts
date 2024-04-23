@@ -29,12 +29,10 @@ function resetPairsForLimitUsers(userCounts:  { [key: number]: number }, pairs: 
     return pairs
 }
 
-function getResettedPairs(previousPairs: number[][], users?: Array<number>): number[][] {
-    let userCounts = countUserPairs(previousPairs, users)
-    return resetPairsForLimitUsers(userCounts, previousPairs)
-}
-
 function generateRandomPairs(previousPairs: number[][], users: number[]) {
+    // Check if the number of users is odd
+    const oddUser = users.length % 2 !== 0 ? users.splice(Math.floor(Math.random() * users.length), 1)[0] : null
+
     const allPossiblePairs = [];
     for (let i = 0; i < users.length; i++) {
         for (let j = i + 1; j < users.length; j++) {
@@ -48,27 +46,51 @@ function generateRandomPairs(previousPairs: number[][], users: number[]) {
         })
     })
 
-    const numPairsToGenerate = Math.min(availablePairs.length, Math.floor(users.length / 2))
-    const randomPairs = []
-    for (let i = 0; i < numPairsToGenerate; i++) {
-        const randomIndex = Math.floor(Math.random() * availablePairs.length)
-        randomPairs.push(availablePairs[randomIndex])
-        availablePairs.splice(randomIndex, 1)
+    // Shuffle the available pairs randomly
+    for (let i = availablePairs.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [availablePairs[i], availablePairs[j]] = [availablePairs[j], availablePairs[i]]
     }
 
-    return randomPairs
+    const pairedUsers = new Set<number>()
+    const randomPairs = []
+    while (availablePairs.length > 0) {
+        const pair = availablePairs.pop()
+        if (pair) {
+            const [user1, user2] = pair
+            // Check if both users in the pair have not been paired before
+            if (!pairedUsers.has(user1) && !pairedUsers.has(user2)) {
+                randomPairs.push(pair)
+                // Mark both users as paired
+                pairedUsers.add(user1)
+                pairedUsers.add(user2)
+            }
+        }
+    }
+
+    // If there was an odd user, return it
+    return oddUser ? { pairs: randomPairs, unpairedUser: oddUser } : { pairs: randomPairs, unpairedUser: null }
 }
 
-let users: Array<number> = [1, 2, 3, 4, 5, 6]
+function getNewPairs(previousPairs: number[][], users?: Array<number>): number[][] {
+    let userCounts = countUserPairs(previousPairs, users)
+    previousPairs = resetPairsForLimitUsers(userCounts, previousPairs)
+}
+
+
+
+let users: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8]
 let previousPairs: number[][] = [
     [1, 2],
-    // [2, 3],
-    [5, 6],
-    [2, 4],
-    [2, 5],
-    [2, 6]
+    [3, 4]
 ]
 
-let resettedPairs = getResettedPairs(previousPairs)
-let randomPairs = generateRandomPairs(resettedPairs, users)
-console.log(randomPairs)
+// console.log(generateRandomPairs(previousPairs, users))
+
+for (let i = 0; i < 5; i++) {
+    console.log(`generation ${i}`)
+    let newPairs = generateRandomPairs(previousPairs, users).pairs
+    console.log(newPairs)
+    previousPairs = previousPairs.concat(newPairs)
+    console.log(previousPairs) 
+}
