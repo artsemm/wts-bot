@@ -19,7 +19,7 @@ function countUserPairs(previousPairs: number[][], users?: number[]): { [key: nu
     return userCounts
 }
 
-function resetPairsForLimitUsers(userCounts:  { [key: number]: number }, pairs: number[][]): number[][] {
+function resetPairsForLimitUsers(userCounts:  { [key: number]: number }, pairs: number[][], users: number[]): number[][] {
     let usersToReset: Array<number> = users.filter(user => (userCounts[user] || users.length - 1) === users.length - 1)
     pairs = pairs.filter(pair => 
         !pair.some(user => usersToReset.includes(user))
@@ -72,7 +72,7 @@ function generateRandomPairs(previousPairs: number[][], users: number[]) {
 
 export function getNewPairsInfo(previousPairs: number[][], users: Array<number>) {
     let userCounts = countUserPairs(previousPairs, users)
-    previousPairs = resetPairsForLimitUsers(userCounts, previousPairs)
+    previousPairs = resetPairsForLimitUsers(userCounts, previousPairs, users)
     let newPairs = generateRandomPairs(previousPairs, users)
     let info = {newPairs: newPairs.pairs, unpairedUser: newPairs.unpairedUser, previousPairs: previousPairs.concat(newPairs.pairs)}
     return info
