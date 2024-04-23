@@ -11,10 +11,10 @@ import handleLanguage from '@/handlers/language'
 import i18n from '@/helpers/i18n'
 import languageMenu from '@/menus/language'
 import startMongo from '@/helpers/startMongo'
-import { getBooksText, getCityText, getGreetingsText, getRegEndText } from '@/handlers/intro'
-import { setName, setCity, FunnelStep, moveFunnelStep, getFunnelStep, setReview, getFirstName, resetFunnelStep } from './models/User'
+import { handleFunnel, getBooksText, getCityText, getGreetingsText, getRegEndText } from '@/handlers/intro'
 import { setScheduler } from './handlers/scheduler'
 import showLog from './middlewares/logs'
+import { handleReset, handleHelp } from './handlers/help'
 
 async function runApp() {
   console.log('Starting app...')
@@ -33,55 +33,9 @@ async function runApp() {
     // Menus
     .use(languageMenu)
   // Commands
-  bot.command(['help', 'start'], async (ctx) => {
-    const funnelStep = await getFunnelStep(ctx.dbuser.id)
-    if (funnelStep === FunnelStep.Greetings) {
-        ctx.api.sendMessage(ctx.dbuser.id, getGreetingsText(), {parse_mode: 'HTML'})
-    } else {
-      ctx.api.sendMessage(ctx.dbuser.id, `Если вы хотите изменить информацию о себе, воспользуйтесь командой /reset`, {parse_mode: 'HTML'})
-    }
-  })
-  bot.command('reset', async ctx => {
-    await resetFunnelStep(ctx.dbuser.id)
-    await ctx.api.sendMessage(ctx.dbuser.id, getGreetingsText(), {parse_mode: 'HTML'})
-    await moveFunnelStep(ctx.dbuser.id)
-  })
-  bot.command('language', handleLanguage)
-  bot.on('message', async (ctx) => {
-    const funnelStep = await getFunnelStep(ctx.dbuser.id)
-    if (funnelStep === FunnelStep.Greetings) {
-        ctx.api.sendMessage(ctx.dbuser.id, getGreetingsText(), {parse_mode: 'HTML'})
-        await moveFunnelStep(ctx.dbuser.id)
-    } 
-    else if (funnelStep === FunnelStep.Name) {
-      const nameSurname = ctx.message?.text
-        if (nameSurname) {
-          await setName(ctx.dbuser.id, nameSurname)
-      ctx.api.sendMessage(ctx.dbuser.id, getCityText(await getFirstName(ctx.dbuser.id)), {parse_mode: 'HTML'})
-        }
-        await moveFunnelStep(ctx.dbuser.id)
-    }
-    else if (funnelStep === FunnelStep.City) {
-        const city = ctx.message?.text
-          if (city) {
-          await setCity(ctx.dbuser.id, city)
-          ctx.api.sendMessage(ctx.dbuser.id, getBooksText(await getFirstName(ctx.dbuser.id)), {parse_mode: 'HTML'})
-          
-          await moveFunnelStep(ctx.dbuser.id) 
-          }
-    }
-    else if (funnelStep === FunnelStep.Books) {
-      const review = ctx.message?.text
-      if (review) {
-        await setReview(ctx.dbuser.id, review)
-        ctx.api.sendMessage(ctx.dbuser.id, getRegEndText(await getFirstName(ctx.dbuser.id)), {parse_mode: 'HTML'})
-      }
-      await moveFunnelStep(ctx.dbuser.id) 
-    }
-    else {
-      // do nothing if user is registered
-    }
-});
+  bot.command(['help', 'start'], handleHelp)
+  bot.command('reset', handleReset)
+  bot.on('message', handleFunnel)
   // Errors
   bot.catch(console.error)
   // Start bot

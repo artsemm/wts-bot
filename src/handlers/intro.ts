@@ -1,4 +1,5 @@
 import Context from '@/models/Context'
+import { setName, setCity, FunnelStep, moveFunnelStep, getFunnelStep, setReview, getFirstName, resetFunnelStep } from '@/models/User'
 
 export function getGreetingsText() {
   return `Привет! Это Random Writing Bot комьюнити школы текстов <a href="https://t.me/+8nVJic5UKAIwZThi">Мне есть что сказать</a> ⚡️ 
@@ -28,4 +29,40 @@ export function getRegEndText(name: string | null) {
 
 2. В конце месяца я спрошу о том, как прошла встреча. Вот и всё! Если будут вопросы – пишите сюда 
 `
+}
+
+export async function handleFunnel(ctx: Context){
+  const funnelStep = await getFunnelStep(ctx.dbuser.id)
+  if (funnelStep === FunnelStep.Greetings) {
+      ctx.api.sendMessage(ctx.dbuser.id, getGreetingsText(), {parse_mode: 'HTML'})
+      await moveFunnelStep(ctx.dbuser.id)
+  } 
+  else if (funnelStep === FunnelStep.Name) {
+    const nameSurname = ctx.message?.text
+      if (nameSurname) {
+        await setName(ctx.dbuser.id, nameSurname)
+    ctx.api.sendMessage(ctx.dbuser.id, getCityText(await getFirstName(ctx.dbuser.id)), {parse_mode: 'HTML'})
+      }
+      await moveFunnelStep(ctx.dbuser.id)
+  }
+  else if (funnelStep === FunnelStep.City) {
+      const city = ctx.message?.text
+        if (city) {
+        await setCity(ctx.dbuser.id, city)
+        ctx.api.sendMessage(ctx.dbuser.id, getBooksText(await getFirstName(ctx.dbuser.id)), {parse_mode: 'HTML'})
+        
+        await moveFunnelStep(ctx.dbuser.id)
+        }
+  }
+  else if (funnelStep === FunnelStep.Books) {
+    const review = ctx.message?.text
+    if (review) {
+      await setReview(ctx.dbuser.id, review)
+      ctx.api.sendMessage(ctx.dbuser.id, getRegEndText(await getFirstName(ctx.dbuser.id)), {parse_mode: 'HTML'})
+    }
+    await moveFunnelStep(ctx.dbuser.id)
+  }
+  else {
+    // do nothing if user is registered
+  }
 }
