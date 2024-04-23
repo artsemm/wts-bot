@@ -1,8 +1,6 @@
 #!/usr/bin/env ts-node-script
 
-import * as os from 'os'
-
-function countUserPairs(previousPairs: number[][], users?: Array<number>): { [key: number]: number } {
+function countUserPairs(previousPairs: number[][], users?: number[]): { [key: number]: number } {
     let userCounts: { [key: number]: number } = {}
     previousPairs.forEach(pair => {
         pair.forEach(user => {
@@ -72,25 +70,28 @@ function generateRandomPairs(previousPairs: number[][], users: number[]) {
     return oddUser ? { pairs: randomPairs, unpairedUser: oddUser } : { pairs: randomPairs, unpairedUser: null }
 }
 
-function getNewPairs(previousPairs: number[][], users?: Array<number>): number[][] {
+export function getNewPairsInfo(previousPairs: number[][], users: Array<number>) {
     let userCounts = countUserPairs(previousPairs, users)
     previousPairs = resetPairsForLimitUsers(userCounts, previousPairs)
+    let newPairs = generateRandomPairs(previousPairs, users)
+    let info = {newPairs: newPairs.pairs, unpairedUser: newPairs.unpairedUser, previousPairs: previousPairs.concat(newPairs.pairs)}
+    return info
 }
 
 
 
-let users: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8]
+let users: Array<number> = [1, 2, 3, 4]
 let previousPairs: number[][] = [
-    [1, 2],
-    [3, 4]
+    // [1, 2],
+    // [3, 4]
 ]
 
 // console.log(generateRandomPairs(previousPairs, users))
 
-for (let i = 0; i < 5; i++) {
+for (let i = 1; i <= 10; i++) {
     console.log(`generation ${i}`)
-    let newPairs = generateRandomPairs(previousPairs, users).pairs
-    console.log(newPairs)
-    previousPairs = previousPairs.concat(newPairs)
+    let newPairsInfo = getNewPairsInfo(previousPairs, users)
+    console.log(newPairsInfo.newPairs)
+    previousPairs = newPairsInfo.previousPairs
     console.log(previousPairs) 
 }
