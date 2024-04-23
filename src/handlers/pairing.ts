@@ -78,20 +78,16 @@ export function getNewPairsInfo(previousPairs: number[][], users: Array<number>)
     return info
 }
 
+// let users: Array<number> = [1, 2, 3, 4]
+// let previousPairs: number[][] = [
+//     [1, 2],
+//     [3, 4]
+// ]
 
-
-let users: Array<number> = [1, 2, 3, 4]
-let previousPairs: number[][] = [
-    // [1, 2],
-    // [3, 4]
-]
-
-// console.log(generateRandomPairs(previousPairs, users))
-
-for (let i = 1; i <= 10; i++) {
-    console.log(`generation ${i}`)
-    let newPairsInfo = getNewPairsInfo(previousPairs, users)
-    console.log(newPairsInfo.newPairs)
-    previousPairs = newPairsInfo.previousPairs
-    console.log(previousPairs) 
-}
+// for (let i = 1; i <= 10; i++) {
+//     console.log(`generation ${i}`)
+//     let newPairsInfo = getNewPairsInfo(previousPairs, users)
+//     console.log(newPairsInfo.newPairs)
+//     previousPairs = newPairsInfo.previousPairs
+//     console.log(previousPairs) 
+// }
