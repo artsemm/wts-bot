@@ -1,32 +1,20 @@
-import { prop, getModelForClass } from '@typegoose/typegoose'
+import { prop, getModelForClass, modelOptions } from '@typegoose/typegoose'
 
-// Define a schema for the inner array
-class Pair {
-    @prop({ default: Date.now })
-    public createdAt?: Date;
-    @prop({ required: true, validate: /\d+/ })
-    values!: number[]
-
-  // Custom validator to ensure two numbers and swap if necessary
-  static validatePair(arr: number[]) {
-    if (arr.length !== 2) {
-      return false
-    }
-
-    // Swap if the first number is greater than the second number
-    if (arr[0] > arr[1]) {
-      [arr[0], arr[1]] = [arr[1], arr[0]]
-    }
-
-    return true;
-  }
-}
-
-// Define a schema for the outer array
+@modelOptions({ schemaOptions: { timestamps: true } })
 export class PairStates {
-  @prop({ type: Pair })
-  public rows!: Pair[]
+  @prop({ type: Array<Array<number>> })
+  public rows!: number[][]
 }
 
 // Create a Mongoose model
 const PairStatesModel = getModelForClass(PairStates)
+
+export async function getLatestState() {
+    return PairStatesModel.findOne({}).sort({ createdAt: -1 }).exec()
+}
+
+export function addPairsState() {
+    return PairStatesModel.create({
+        rows: [[1, 2], [3, 4]] 
+    })
+}

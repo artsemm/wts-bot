@@ -1,5 +1,8 @@
 #!/usr/bin/env ts-node-script
 
+import { getLatestState } from "@/models/Pair"
+import { Context } from "grammy"
+
 function countUserPairs(previousPairs: number[][], users?: number[]): { [key: number]: number } {
     let userCounts: { [key: number]: number } = {}
     previousPairs.forEach(pair => {
@@ -28,7 +31,7 @@ function resetPairsForLimitUsers(userCounts:  { [key: number]: number }, pairs: 
 }
 
 function generateRandomPairs(previousPairs: number[][], users: number[]) {
-    // Check if the number of users is odd
+    users = users.sort()
     const oddUser = users.length % 2 !== 0 ? users.splice(Math.floor(Math.random() * users.length), 1)[0] : null
 
     const allPossiblePairs = [];
@@ -78,16 +81,12 @@ export function getNewPairsInfo(previousPairs: number[][], users: Array<number>)
     return info
 }
 
-// let users: Array<number> = [1, 2, 3, 4]
-// let previousPairs: number[][] = [
-//     [1, 2],
-//     [3, 4]
-// ]
-
-// for (let i = 1; i <= 10; i++) {
-//     console.log(`generation ${i}`)
-//     let newPairsInfo = getNewPairsInfo(previousPairs, users)
-//     console.log(newPairsInfo.newPairs)
-//     previousPairs = newPairsInfo.previousPairs
-//     console.log(previousPairs) 
-// }
+export async function sendPairs(ctx: Context) {
+    const state = await getLatestState()
+    if (state) {
+        for (let i = 0; i < state.rows.length; i += 1) {
+            await ctx.api.sendMessage(state.rows[i][0], 'У тебя есть пара')
+            await ctx.api.sendMessage(state.rows[i][1], 'У тебя есть пара')
+        }
+    }
+}

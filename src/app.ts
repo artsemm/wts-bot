@@ -15,6 +15,8 @@ import { handleFunnel, getBooksText, getCityText, getGreetingsText, getRegEndTex
 import { setScheduler } from './handlers/scheduler'
 import showLog from './middlewares/logs'
 import { handleReset, handleHelp } from './handlers/help'
+import { addPairsState, getLatestState } from './models/Pair'
+import { sendPairs } from './handlers/pairing'
 
 async function runApp() {
   console.log('Starting app...')
@@ -35,6 +37,7 @@ async function runApp() {
   // Commands
   bot.command(['help', 'start'], handleHelp)
   bot.command('reset', handleReset)
+  bot.command('test', sendPairs)
   bot.on('message', handleFunnel)
   // Errors
   bot.catch(console.error)
