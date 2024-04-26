@@ -9,7 +9,7 @@ export function setScheduler() {
 //   console.log('running a task every second');
 // })
 
-  cron.schedule('* * * * * *', async () => {
-  console.log(await isUserAvailable(56753392))
-})
+//   cron.schedule('* * * * * *', async () => {
+//   console.log(await isUserAvailable(56753392))
+// })
 }
