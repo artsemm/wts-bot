@@ -3,6 +3,7 @@
 import { addPairsState, getLatestState } from "@/models/Pair"
 import { User, findUser, getAllUserIds } from "@/models/User"
 import Context from '@/models/Context'
+import { isUserAvailable } from "./checkUser"
 
 function countUserPairs(previousPairs: number[][], users?: number[]): { [key: number]: number } {
     let userCounts: { [key: number]: number } = {}
@@ -88,8 +89,18 @@ export async function sendPairs(ctx: Context) {
         throw new Error('No state was found!')
     }
     // check all available users TODO
+    const dbUsers = await getAllUserIds()
+    let usersToPair: number[] = []
+    for (let i = 0; i < dbUsers.length; i += 1) {
+        const userId = dbUsers[i]
+        const isAvailable = await isUserAvailable(userId)
+        const isRoleToPair = "user" === (await findUser(userId))?.role// checks if the role of the user is "user"
+        if ( isAvailable && isRoleToPair) {
+            usersToPair.push(userId)
+        }
+    }
 
-    const newPairsInfo = getNewPairsInfo(state.rows, await getAllUserIds())
+    const newPairsInfo = getNewPairsInfo(state.rows, usersToPair)
     addPairsState(newPairsInfo.previousPairs) // what state is now after creating new pairs
     const newPairs = newPairsInfo.newPairs
     for (let i = 0; i < newPairs.length; i += 1) {
@@ -118,6 +129,7 @@ ${user.name} 👋
   }
   
 
-  export function test(ctx: Context) {
-    console.log(ctx.update.message?.from.username)
+  export async function test(ctx: Context) {
+    const res = await isUserAvailable(ctx.dbuser.id)
+    ctx.reply(String(res))
   }
