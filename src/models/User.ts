@@ -41,6 +41,10 @@ export function findOrCreateUser(id: number) {
   )
 }
 
+export async function findUser(id: number) {
+  return UserModel.findOne({tgUser: id}).exec()
+}
+
 export async function setTgUser(id:number, tgUser: object) {
   return UserModel.updateOne(
     { id },

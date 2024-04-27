@@ -1,6 +1,7 @@
 #!/usr/bin/env ts-node-script
 
 import { getLatestState } from "@/models/Pair"
+import { User, findUser } from "@/models/User"
 import { Context } from "grammy"
 
 function countUserPairs(previousPairs: number[][], users?: number[]): { [key: number]: number } {
@@ -85,8 +86,23 @@ export async function sendPairs(ctx: Context) {
     const state = await getLatestState()
     if (state) {
         for (let i = 0; i < state.rows.length; i += 1) {
-            await ctx.api.sendMessage(state.rows[i][0], 'У тебя есть пара')
-            await ctx.api.sendMessage(state.rows[i][1], 'У тебя есть пара')
+            const p1 = await findUser([i][1])
+            const p2 = await findUser([i][0])
+            await ctx.api.sendMessage(state.rows[i][0], `${getPairText(p1)}`)
+            await ctx.api.sendMessage(state.rows[i][1], `${getPairText(p2)}`)
         }
     }
 }
+
+export function getPairText(user: User | null) {
+    if (user === null) {
+        console.log('empty user was passed to getPairText!')
+        return 
+    }
+    return `Привет! Сегодня первое число месяца. А вот и ваш мэтч:
+${user.name} 
+@
+${user.city} 
+Три любимые книги: ${user.review} 
+`
+  }
