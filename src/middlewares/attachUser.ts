@@ -1,5 +1,5 @@
 import { NextFunction } from 'grammy'
-import { findOrCreateUser } from '@/models/User'
+import { findOrCreateUser, setTgUsername } from '@/models/User'
 import Context from '@/models/Context'
 
 export default async function attachUser(ctx: Context, next: NextFunction) {
@@ -11,5 +11,8 @@ export default async function attachUser(ctx: Context, next: NextFunction) {
     throw new Error('User not found')
   }
   ctx.dbuser = user
+  if (ctx.from.username) {
+    await setTgUsername(ctx.from.id, ctx.from.username)
+  }
   return next()
 }

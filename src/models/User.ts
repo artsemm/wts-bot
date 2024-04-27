@@ -15,7 +15,7 @@ export class User {
   @prop({ required: true, default: 'ru' })
   language!: string
   @prop({ required: true, default: null })
-  tgUser!: object
+  username!: string
   @prop({ required: true, default: FunnelStep.Greetings })
   funnelStep!: FunnelStep
   @prop({ required: true, default: 'user' })
@@ -51,10 +51,10 @@ export async function getAllUserIds(){
       return allUserIds
 }
 
-export async function setTgUser(id:number, tgUser: object) {
+export async function setTgUsername(id:number, username: string) {
   return UserModel.updateOne(
     { id },
-    {tgUser: tgUser}
+    {username: username}
   )
 }
 

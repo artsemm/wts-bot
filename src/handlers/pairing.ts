@@ -2,7 +2,7 @@
 
 import { addPairsState, getLatestState } from "@/models/Pair"
 import { User, findUser, getAllUserIds } from "@/models/User"
-import { Context } from "grammy"
+import Context from '@/models/Context'
 
 function countUserPairs(previousPairs: number[][], users?: number[]): { [key: number]: number } {
     let userCounts: { [key: number]: number } = {}
@@ -112,8 +112,13 @@ export function getPairText(user: User) {
     return `Привет! Сегодня первое число месяца. А вот и ваш мэтч:
 
 ${user.name} 
-${user.tgUser} 
+${user.username} 
 ${user.city} 
 Три любимые книги: ${user.review} 
 `
+  }
+  
+
+  export function test(ctx: Context) {
+    console.log(ctx.update.message?.from.username)
   }
