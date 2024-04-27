@@ -100,6 +100,7 @@ export function getPairText(user: User | null) {
         return 
     }
     return `Привет! Сегодня первое число месяца. А вот и ваш мэтч:
+    
 ${user.name} 
 @
 ${user.city} 
