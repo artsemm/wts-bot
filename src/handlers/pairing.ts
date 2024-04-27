@@ -98,9 +98,8 @@ export async function sendPairs(ctx: Context) {
         if (p1 === null || p2 == null) {
             throw new Error('sendPairs error: users were not found')
         }
-        console.log(p1)
-        // await ctx.api.sendMessage(state.rows[i][0], `${getPairText(p1)}`)
-        // await ctx.api.sendMessage(state.rows[i][1], `${getPairText(p2)}`)
+        await ctx.api.sendMessage(newPairs[i][0], `${getPairText(p1)}`)
+        await ctx.api.sendMessage(newPairs[i][1], `${getPairText(p2)}`)
     }
 }
 
@@ -111,10 +110,10 @@ export function getPairText(user: User) {
     }
     return `Привет! Сегодня первое число месяца. А вот и ваш мэтч:
 
-${user.name} 
-${user.username} 
-${user.city} 
-Три любимые книги: ${user.review} 
+${user.name} 👋
+@${user.username} 
+Город ${user.city} 
+Три впечатлившие книги: ${user.review} 
 `
   }
   
