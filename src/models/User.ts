@@ -45,6 +45,13 @@ export async function findUser(id: number) {
   return UserModel.findOne({tgUser: id}).exec()
 }
 
+export async function getAllUserIds(){
+      const allUsers = await UserModel.find({}).exec()
+      const allUserIds = allUsers.map(user => user.id)
+      console.log(allUserIds)
+      return allUserIds
+}
+
 export async function setTgUser(id:number, tgUser: object) {
   return UserModel.updateOne(
     { id },

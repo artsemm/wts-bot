@@ -84,13 +84,17 @@ export function getNewPairsInfo(previousPairs: number[][], users: Array<number>)
 
 export async function sendPairs(ctx: Context) {
     const state = await getLatestState()
-    if (state) {
-        for (let i = 0; i < state.rows.length; i += 1) {
-            const p1 = await findUser([i][1])
-            const p2 = await findUser([i][0])
-            await ctx.api.sendMessage(state.rows[i][0], `${getPairText(p1)}`)
-            await ctx.api.sendMessage(state.rows[i][1], `${getPairText(p2)}`)
-        }
+    if (state === null) {
+        throw new Error('No state was found!')
+    }
+    // check all available users TODO
+
+    generateRandomPairs(state.rows, [])
+    for (let i = 0; i < state.rows.length; i += 1) {
+        const p1 = await findUser([i][1])
+        const p2 = await findUser([i][0])
+        await ctx.api.sendMessage(state.rows[i][0], `${getPairText(p1)}`)
+        await ctx.api.sendMessage(state.rows[i][1], `${getPairText(p2)}`)
     }
 }
 
@@ -100,7 +104,7 @@ export function getPairText(user: User | null) {
         return 
     }
     return `Привет! Сегодня первое число месяца. А вот и ваш мэтч:
-    
+
 ${user.name} 
 @
 ${user.city} 
