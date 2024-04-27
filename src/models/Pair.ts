@@ -13,8 +13,6 @@ export async function getLatestState() {
     return PairStatesModel.findOne({}).sort({ createdAt: -1 }).exec()
 }
 
-export function addPairsState() {
-    return PairStatesModel.create({
-        rows: [[1, 2], [3, 4]] 
-    })
+export function addPairsState(pairs: number[][]) {
+    return PairStatesModel.create(pairs)
 }

@@ -42,13 +42,12 @@ export function findOrCreateUser(id: number) {
 }
 
 export async function findUser(id: number) {
-  return UserModel.findOne({tgUser: id}).exec()
+  return UserModel.findOne({id: id}).exec()
 }
 
 export async function getAllUserIds(){
       const allUsers = await UserModel.find({}).exec()
       const allUserIds = allUsers.map(user => user.id)
-      console.log(allUserIds)
       return allUserIds
 }
 

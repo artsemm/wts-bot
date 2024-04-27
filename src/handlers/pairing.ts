@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node-script
 
-import { getLatestState } from "@/models/Pair"
-import { User, findUser } from "@/models/User"
+import { addPairsState, getLatestState } from "@/models/Pair"
+import { User, findUser, getAllUserIds } from "@/models/User"
 import { Context } from "grammy"
 
 function countUserPairs(previousPairs: number[][], users?: number[]): { [key: number]: number } {
@@ -89,16 +89,22 @@ export async function sendPairs(ctx: Context) {
     }
     // check all available users TODO
 
-    generateRandomPairs(state.rows, [])
-    for (let i = 0; i < state.rows.length; i += 1) {
-        const p1 = await findUser([i][1])
-        const p2 = await findUser([i][0])
-        await ctx.api.sendMessage(state.rows[i][0], `${getPairText(p1)}`)
-        await ctx.api.sendMessage(state.rows[i][1], `${getPairText(p2)}`)
+    const newPairsInfo = getNewPairsInfo(state.rows, await getAllUserIds())
+    addPairsState(newPairsInfo.previousPairs) // what state is now after creating new pairs
+    const newPairs = newPairsInfo.newPairs
+    for (let i = 0; i < newPairs.length; i += 1) {
+        const p1 = await findUser(newPairs[i][1])
+        const p2 = await findUser(newPairs[i][0])
+        if (p1 === null || p2 == null) {
+            throw new Error('sendPairs error: users were not found')
+        }
+        console.log(p1)
+        // await ctx.api.sendMessage(state.rows[i][0], `${getPairText(p1)}`)
+        // await ctx.api.sendMessage(state.rows[i][1], `${getPairText(p2)}`)
     }
 }
 
-export function getPairText(user: User | null) {
+export function getPairText(user: User) {
     if (user === null) {
         console.log('empty user was passed to getPairText!')
         return 
@@ -106,7 +112,7 @@ export function getPairText(user: User | null) {
     return `Привет! Сегодня первое число месяца. А вот и ваш мэтч:
 
 ${user.name} 
-@
+${user.tgUser} 
 ${user.city} 
 Три любимые книги: ${user.review} 
 `

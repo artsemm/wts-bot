@@ -38,7 +38,7 @@ async function runApp() {
   // Commands
   bot.command(['help', 'start'], handleHelp)
   bot.command('reset', handleReset)
-  bot.command('test', getAllUserIds)
+  bot.command('test', sendPairs)
   bot.on('message', handleFunnel)
   // Errors
   bot.catch(console.error)
