@@ -46,6 +46,9 @@ async function runApp() {
   await bot.init()
   run(bot)
   console.info(`Bot ${bot.botInfo.username} is up and running`)
+
+  process.once("SIGINT", () => bot.stop())
+  process.once("SIGTERM", () => bot.stop())
 }
 
 
