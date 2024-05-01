@@ -130,6 +130,10 @@ ${user.name} 👋
   
 
   export async function test(ctx: Context) {
+    if(ctx.dbuser.username !== 'seagull') {
+        ctx.reply('no access')
+        return
+    }
     const res = await isUserAvailable(ctx.dbuser.id)
     ctx.reply(String(res))
   }
