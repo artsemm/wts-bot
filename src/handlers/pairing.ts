@@ -128,30 +128,3 @@ ${user.name} 👋
 `
   }
   
-
-export async function test(ctx: Context) {
-    if(ctx.dbuser.username !== 'seagull') {
-        ctx.reply('no access')
-        return
-    }
-    const res = await isUserAvailable(ctx.dbuser.id)
-    ctx.reply(String(res))
-  }
-
-export async function sendMessageToEveryone(ctx: Context) {
-    if(ctx.dbuser.role !== 'admin') {
-        return
-    }
-    if (!ctx.message || !ctx.message.text) {
-        console.log("Empty context error: sendMessageToEveryone")
-        return
-    }
-    const message = ctx.message.text.substring(5)
-    const dbUsers = await getAllUserIds()
-    for (let i = 0; i < dbUsers.length; i += 1) {
-        const isAvailable = await isUserAvailable(dbUsers[i])
-        if ( isAvailable ) {
-            ctx.api.sendMessage(dbUsers[i], message)
-        }
-    }
-}

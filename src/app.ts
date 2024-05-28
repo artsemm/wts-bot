@@ -14,9 +14,9 @@ import startMongo from '@/helpers/startMongo'
 import { handleFunnel, getBooksText, getCityText, getGreetingsText, getRegEndText } from '@/handlers/intro'
 import { setScheduler } from './handlers/scheduler'
 import showLog from './middlewares/logs'
-import { handleReset, handleHelp } from './handlers/help'
+import { handleReset, handleHelp, sendMessageToEveryone } from './handlers/help'
 import { addPairsState, getLatestState } from './models/Pair'
-import { sendMessageToEveryone, sendPairs, test } from './handlers/pairing'
+import { sendPairs } from './handlers/pairing'
 import { getAllUserIds } from './models/User'
 
 async function runApp() {
