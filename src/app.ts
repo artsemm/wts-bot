@@ -16,7 +16,7 @@ import { setScheduler } from './handlers/scheduler'
 import showLog from './middlewares/logs'
 import { handleReset, handleHelp } from './handlers/help'
 import { addPairsState, getLatestState } from './models/Pair'
-import { sendPairs, test } from './handlers/pairing'
+import { sendMessageToEveryone, sendPairs, test } from './handlers/pairing'
 import { getAllUserIds } from './models/User'
 
 async function runApp() {
@@ -39,6 +39,7 @@ async function runApp() {
   bot.command(['help', 'start'], handleHelp)
   bot.command('reset', handleReset)
   bot.command('test', sendPairs)
+  bot.command('all', sendMessageToEveryone)
   bot.on('message', handleFunnel)
   // Errors
   bot.catch(console.error)
