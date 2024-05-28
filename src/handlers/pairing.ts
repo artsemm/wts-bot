@@ -112,6 +112,18 @@ export async function sendPairs(ctx: Context) {
         await ctx.api.sendMessage(newPairs[i][0], `${getPairText(p1)}`)
         await ctx.api.sendMessage(newPairs[i][1], `${getPairText(p2)}`)
     }
+    // handling unpaired user
+    if (newPairsInfo.unpairedUser) {
+        console.log('unpaired user ', )
+        const p1 = await findUser(newPairsInfo.unpairedUser)
+        const p2 = await findUser(219411361) // community manager, hardcoded
+        if (p1 === null || p2 == null) {
+            throw new Error('sendPairs error: users were not found')
+        }
+        await ctx.api.sendMessage(newPairsInfo.unpairedUser, `${getPairText(p1)}`)
+        await ctx.api.sendMessage(219411361, `${getPairText(p2)}`)
+    }
+    
 }
 
 export function getPairText(user: User) {
