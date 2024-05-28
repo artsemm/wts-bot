@@ -101,8 +101,8 @@ export async function sendPairs(ctx: Context) {
     }
 
     const newPairsInfo = getNewPairsInfo(state.rows, usersToPair)
-    addPairsState(newPairsInfo.previousPairs) // what state is now after creating new pairs
     const newPairs = newPairsInfo.newPairs
+    addPairsState(newPairsInfo.previousPairs) // what state is now after creating new pairs
     for (let i = 0; i < newPairs.length; i += 1) {
         const p1 = await findUser(newPairs[i][1])
         const p2 = await findUser(newPairs[i][0])
@@ -114,7 +114,7 @@ export async function sendPairs(ctx: Context) {
     }
     // handling unpaired user
     if (newPairsInfo.unpairedUser) {
-        console.log('unpaired user ', )
+        console.log('unpaired user ', ) 
         const p1 = await findUser(newPairsInfo.unpairedUser)
         const p2 = await findUser(219411361) // community manager, hardcoded
         if (p1 === null || p2 == null) {
