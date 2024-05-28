@@ -120,8 +120,8 @@ export async function sendPairs(ctx: Context) {
         if (p1 === null || p2 == null) {
             throw new Error('sendPairs error: users were not found')
         }
-        await ctx.api.sendMessage(newPairsInfo.unpairedUser, `${getPairText(p1)}`)
-        await ctx.api.sendMessage(219411361, `${getPairText(p2)}`)
+        await ctx.api.sendMessage(newPairsInfo.unpairedUser, `${getPairText(p2)}`)
+        await ctx.api.sendMessage(219411361, `${getPairText(p1)}`)
     }
     
 }

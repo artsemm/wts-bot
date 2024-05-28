@@ -3,6 +3,7 @@ import sendOptions from '@/helpers/sendOptions'
 import { getFunnelStep, FunnelStep, resetFunnelStep, moveFunnelStep, getAllUserIds } from '@/models/User'
 import { getGreetingsText } from './intro'
 import { isUserAvailable } from './checkUser'
+import { sendPairs } from './pairing'
 
 export async function handleHelp(ctx: Context) {
   const funnelStep = await getFunnelStep(ctx.dbuser.id)
@@ -25,8 +26,7 @@ export async function test(ctx: Context) {
       ctx.reply('no access')
       return
   }
-  const res = await isUserAvailable(ctx.dbuser.id)
-  ctx.reply(String(res))
+  sendPairs(ctx)
 }
 
 export async function sendMessageToEveryone(ctx: Context) {

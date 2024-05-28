@@ -14,7 +14,7 @@ import startMongo from '@/helpers/startMongo'
 import { handleFunnel, getBooksText, getCityText, getGreetingsText, getRegEndText } from '@/handlers/intro'
 import { setScheduler } from './handlers/scheduler'
 import showLog from './middlewares/logs'
-import { handleReset, handleHelp, sendMessageToEveryone } from './handlers/help'
+import { handleReset, handleHelp, sendMessageToEveryone, test } from './handlers/help'
 import { addPairsState, getLatestState } from './models/Pair'
 import { sendPairs } from './handlers/pairing'
 import { getAllUserIds } from './models/User'
@@ -38,7 +38,7 @@ async function runApp() {
   // Commands
   bot.command(['help', 'start'], handleHelp)
   bot.command('reset', handleReset)
-  bot.command('test', sendPairs)
+  bot.command('test', test)
   bot.command('all', sendMessageToEveryone)
   bot.on('message', handleFunnel)
   // Errors
@@ -48,8 +48,8 @@ async function runApp() {
   run(bot)
   console.info(`Bot ${bot.botInfo.username} is up and running`)
 
-  process.once("SIGINT", () => bot.stop())
-  process.once("SIGTERM", () => bot.stop())
+  // process.once("SIGINT", () => bot.stop())
+  // process.once("SIGTERM", () => bot.stop())
 }
 
 
