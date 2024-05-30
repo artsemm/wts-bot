@@ -88,8 +88,10 @@ export async function sendPairs(ctx: Context) {
     if (state === null) {
         throw new Error('No state was found!')
     }
+    console.log('state: ', state)
     // check all available users TODO
     const dbUsers = await getAllUserIds()
+    console.log('dbusers: ', dbUsers.length)
     let usersToPair: number[] = []
     for (let i = 0; i < dbUsers.length; i += 1) {
         const userId = dbUsers[i]
