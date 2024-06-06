@@ -131,7 +131,7 @@ export function getPairText(user: User) {
         console.log('empty user was passed to getPairText!')
         return 
     }
-    return `Привет! Сегодня первое число месяца. А вот и ваш мэтч:
+    return `Привет! Присылаем тебе мэтч:
 
 ${user.name} 👋
 @${user.username} 
