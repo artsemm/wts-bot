@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node-script
 
 import { addPairsState, getLatestState } from "@/models/Pair"
-import { User, findUser, getAllUserIds } from "@/models/User"
+import { FunnelStep, User, findUser, getAllUserIds } from "@/models/User"
 import Context from '@/models/Context'
 import { isUserAvailable } from "./checkUser"
 
@@ -88,16 +88,15 @@ export async function sendPairs(ctx: Context) {
     if (state === null) {
         throw new Error('No state was found!')
     }
-    console.log('state: ', state)
     // check all available users TODO
     const dbUsers = await getAllUserIds()
-    console.log('dbusers: ', dbUsers.length)
     let usersToPair: number[] = []
     for (let i = 0; i < dbUsers.length; i += 1) {
         const userId = dbUsers[i]
         const isAvailable = await isUserAvailable(userId)
-        const isRoleToPair = "user" === (await findUser(userId))?.role// checks if the role of the user is "user"
-        if ( isAvailable && isRoleToPair) {
+        const isRoleToPair = "user" === (await findUser(userId))?.role // checks if the role of the user is "user"
+        const isRegistered = FunnelStep.Done === (await findUser(userId))?.funnelStep
+        if ( isAvailable && isRoleToPair && isRegistered) {
             usersToPair.push(userId)
         }
     }
@@ -116,7 +115,6 @@ export async function sendPairs(ctx: Context) {
     }
     // handling unpaired user
     if (newPairsInfo.unpairedUser) {
-        console.log('unpaired user ', ) 
         const p1 = await findUser(newPairsInfo.unpairedUser)
         const p2 = await findUser(219411361) // community manager, hardcoded
         if (p1 === null || p2 == null) {
