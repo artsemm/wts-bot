@@ -2,6 +2,7 @@
 
 import { addPairsState, getLatestState } from "@/models/Pair"
 import { FunnelStep, User, findUser, getAllUserIds } from "@/models/User"
+import { Bot } from 'grammy'
 import Context from '@/models/Context'
 import { isUserAvailable } from "./checkUser"
 
@@ -83,7 +84,7 @@ export function getNewPairsInfo(previousPairs: number[][], users: Array<number>)
     return info
 }
 
-export async function sendPairs(ctx: Context) {
+export async function sendPairs(bot: Bot<Context>) {
     const state = await getLatestState()
     if (state === null) {
         throw new Error('No state was found!')
@@ -110,8 +111,8 @@ export async function sendPairs(ctx: Context) {
         if (p1 === null || p2 == null) {
             throw new Error('sendPairs error: users were not found')
         }
-        await ctx.api.sendMessage(newPairs[i][0], `${getPairText(p1)}`)
-        await ctx.api.sendMessage(newPairs[i][1], `${getPairText(p2)}`)
+        await bot.api.sendMessage(newPairs[i][0], `${getPairText(p1)}`)
+        await bot.api.sendMessage(newPairs[i][1], `${getPairText(p2)}`)
     }
     // handling unpaired user
     if (newPairsInfo.unpairedUser) {
@@ -120,8 +121,8 @@ export async function sendPairs(ctx: Context) {
         if (p1 === null || p2 == null) {
             throw new Error('sendPairs error: users were not found')
         }
-        await ctx.api.sendMessage(newPairsInfo.unpairedUser, `${getPairText(p2)}`)
-        await ctx.api.sendMessage(219411361, `${getPairText(p1)}`)
+        await bot.api.sendMessage(newPairsInfo.unpairedUser, `${getPairText(p2)}`)
+        await bot.api.sendMessage(219411361, `${getPairText(p1)}`)
     }
     
 }

@@ -1,5 +1,5 @@
 import Context from '@/models/Context'
-import sendOptions from '@/helpers/sendOptions'
+import bot from '@/helpers/bot'
 import { getFunnelStep, FunnelStep, resetFunnelStep, moveFunnelStep, getAllUserIds } from '@/models/User'
 import { getGreetingsText } from './intro'
 import { isUserAvailable } from './checkUser'
@@ -21,12 +21,12 @@ export async function handleReset(ctx: Context) {
   await moveFunnelStep(ctx.dbuser.id)
 }
 
-export async function test(ctx: Context) {
+export async function sendPairsManually(ctx: Context) {
   if(ctx.dbuser.username !== 'seagull') {
       ctx.reply('no access')
       return
   }
-  sendPairs(ctx)
+  sendPairs(bot)
 }
 
 export async function sendMessageToEveryone(ctx: Context) {
